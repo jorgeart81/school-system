@@ -1,3 +1,4 @@
+using Infrastructure;
 
 namespace WebApi
 {
@@ -13,6 +14,8 @@ namespace WebApi
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
+            builder.Services.AddInfrastructureServices(builder.Configuration);
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -25,6 +28,7 @@ namespace WebApi
 
             app.UseAuthorization();
 
+            app.UseInfrastructure();
 
             app.MapControllers();
 
