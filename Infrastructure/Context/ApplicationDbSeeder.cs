@@ -29,9 +29,7 @@ public class ApplicationDbSeeder(
 
             if (await _applicationDbContext.Database.CanConnectAsync(cancellationToken))
             {
-                // Seeding
-                // Default Roles > Assing permissions/claims
-                await InitializeDatabaseAsync(cancellationToken);
+                await InitializeDefaultRoleAsync(cancellationToken);
                 // Users > Assing Roles
                 await InitializeAdminUserAsync();
             }
