@@ -1,7 +1,9 @@
 using Finbuckle.MultiTenant;
 using Infrastructure.Context;
+using Infrastructure.Identity.Models;
 using Infrastructure.Tenancy;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,7 +29,34 @@ public static class Startup
             .AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseNpgsql(defaultConnection);
-            });
+            })
+            .AddTransient<ITenantDbSeeder, TenantDbSeeder>()
+            .AddTransient<ApplicationDbSeeder>()
+            .AddIdentityService();
+    }
+
+    public static async Task AddDatabaseInitializerAsync(this IServiceProvider serviceProvider, CancellationToken cancellationToken = default)
+    {
+        using var scope = serviceProvider.CreateScope();
+
+        await scope.ServiceProvider.GetRequiredService<ITenantDbSeeder>()
+            .InitializeDatabaseAsync(cancellationToken);
+    }
+
+    internal static IServiceCollection AddIdentityService(this IServiceCollection services)
+    {
+        return services
+            .AddIdentity<ApplicationUser, ApplicationRole>(opntions =>
+            {
+                opntions.Password.RequiredLength = 8;
+                opntions.Password.RequireDigit = false;
+                opntions.Password.RequireLowercase = false;
+                opntions.Password.RequireUppercase = false;
+                opntions.User.RequireUniqueEmail = true;
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders()
+            .Services;
     }
 
     public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)
