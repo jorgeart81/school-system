@@ -1,7 +1,9 @@
 using Finbuckle.MultiTenant;
 using Infrastructure.Context;
+using Infrastructure.Identity.Auth;
 using Infrastructure.Identity.Models;
 using Infrastructure.Tenancy;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +34,8 @@ public static class Startup
             })
             .AddTransient<ITenantDbSeeder, TenantDbSeeder>()
             .AddTransient<ApplicationDbSeeder>()
-            .AddIdentityService();
+            .AddIdentityService()
+            .AddPermissions();
     }
 
     public static async Task AddDatabaseInitializerAsync(this IServiceProvider serviceProvider, CancellationToken cancellationToken = default)
@@ -57,6 +60,13 @@ public static class Startup
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders()
             .Services;
+    }
+
+    internal static IServiceCollection AddPermissions(this IServiceCollection services)
+    {
+        return services
+            .AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>()
+            .AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
     }
 
     public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)
