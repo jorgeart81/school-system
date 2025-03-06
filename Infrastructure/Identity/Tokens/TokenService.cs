@@ -17,6 +17,8 @@ public class TokenService(UserManager<ApplicationUser> userManager,
     RoleManager<ApplicationRole> roleManager,
     IMultiTenantContextAccessor<SchoolSystemTenantInfo> tenantContextAccessor) : ITokenService
 {
+    private readonly string _jwtKey = "MIIBVgIBADANBgkqhkiG9w0BAQEFAASCAUAwggE8AgEAAkEA1XIpaAmDvLkGV7J8ipFIOu3bcK3TOPEUziZnJSCRzti3j7nuChGik+2PDGuHBHFOm205lU0SIpKeGpFgxxblXrFcFDC";
+
     public async Task<TokenResponse> LoginAsync(TokenRequest request)
     {
         #region Validations
@@ -47,9 +49,48 @@ public class TokenService(UserManager<ApplicationUser> userManager,
         return await GenerateTokenAndUpdateUserAsync(userInDb);
     }
 
-    public Task<TokenResponse> RefreshTokenAsync(RefreshTokenRequest request)
+    public async Task<TokenResponse> RefreshTokenAsync(RefreshTokenRequest request)
     {
-        throw new NotImplementedException();
+        if (string.IsNullOrEmpty(request.CurrentJwt))
+            throw new UnauthorizedException(["Invalid token provided. Failed to generate new token."]);
+
+        ClaimsPrincipal? userPrincipal = GetClaimsPrincipalFromExpiringToken(request.CurrentJwt);
+        string? userEmail = userPrincipal?.GetEmail() ?? throw new UnauthorizedException(["Authentication failed."]);
+
+        ApplicationUser userInDb = await userManager.FindByEmailAsync(userEmail) ?? throw new UnauthorizedException(["Authentication failed."]);
+
+        if (userInDb.RefreshToken != request.CurrentRefreshJwt
+            || userInDb.RefreshTokenExpiryTime < DateTime.UtcNow)
+        {
+            throw new UnauthorizedException(["Invalid token."]);
+        }
+
+        return await GenerateTokenAndUpdateUserAsync(userInDb);
+    }
+
+    private ClaimsPrincipal GetClaimsPrincipalFromExpiringToken(string expiringToken)
+    {
+        var tokenValidationParams = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ClockSkew = TimeSpan.Zero,
+            RoleClaimType = ClaimTypes.Role,
+            ValidateLifetime = false,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey))
+        };
+
+        JwtSecurityTokenHandler tokenHandler = new();
+        ClaimsPrincipal principal = tokenHandler.ValidateToken(expiringToken, tokenValidationParams, out var securityToken);
+
+        if (securityToken is not JwtSecurityToken jwtSecurityToken
+            || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+        {
+            throw new UnauthorizedException(["Invalid token provided. Failed to generate new token."]);
+        }
+
+        return principal;
     }
 
     private async Task<TokenResponse> GenerateTokenAndUpdateUserAsync(ApplicationUser user)
@@ -88,11 +129,9 @@ public class TokenService(UserManager<ApplicationUser> userManager,
         return tokenHandler.WriteToken(token);
     }
 
-    private static SigningCredentials GenerateSigningCredentials()
+    private SigningCredentials GenerateSigningCredentials()
     {
-        string jwtKey = "MIIBVgIBADANBgkqhkiG9w0BAQEFAASCAUAwggE8AgEAAkEA1XIpaAmDvLkGV7J8ipFIOu3bcK3TOPEUziZnJSCRzti3j7nuChGik+2PDGuHBHFOm205lU0SIpKeGpFgxxblXrFcFDC";
-
-        byte[] secret = Encoding.UTF8.GetBytes(jwtKey);
+        byte[] secret = Encoding.UTF8.GetBytes(_jwtKey);
         return new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256);
     }
 
