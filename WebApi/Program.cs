@@ -1,6 +1,4 @@
-using System.Threading.Tasks;
 using Infrastructure;
-using Microsoft.OpenApi;
 
 namespace WebApi
 {
@@ -17,6 +15,8 @@ namespace WebApi
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddInfrastructureServices(builder.Configuration);
+
+            builder.Services.AddJwtAuthetication(builder.Services.GetJwtSettings(builder.Configuration));
 
             var app = builder.Build();
 
