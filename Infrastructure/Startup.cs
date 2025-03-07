@@ -143,7 +143,7 @@ public static class Startup
                 OnChallenge = context =>
                 {
                     context.HandleResponse();
-                    if (context.Response.HasStarted)
+                    if (!context.Response.HasStarted)
                     {
                         context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                         context.Response.ContentType = "application/json";
