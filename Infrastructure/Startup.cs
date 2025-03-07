@@ -91,7 +91,7 @@ public static class Startup
     public static JwtSettings GetJwtSettings(this IServiceCollection services, IConfiguration config)
     {
         var jwtSettingsConfig = config.GetSection(nameof(JwtSettings));
-        
+
         // Registers the jwtSettings Config configuration section with the ASP.NET Core dependency injection (DI) system.
         services.Configure<JwtSettings>(jwtSettingsConfig);
 
@@ -228,7 +228,9 @@ public static class Startup
     public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)
     {
         return app
+            .UseAuthentication()
             .UseMultiTenant()
+            .UseAuthorization()
             .UseOpenApiDocumentation();
     }
 

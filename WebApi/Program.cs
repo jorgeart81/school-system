@@ -25,8 +25,6 @@ namespace WebApi
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
-
             app.UseInfrastructure();
 
             app.MapControllers();
