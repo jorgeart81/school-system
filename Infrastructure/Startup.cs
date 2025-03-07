@@ -135,15 +135,6 @@ public static class Startup
                 },
                 OnChallenge = context =>
                 {
-                    static Task JwtBearerChallengeContextResponse(JwtBearerChallengeContext context, HttpStatusCode statusCode, string message)
-                    {
-                        context.Response.StatusCode = (int)statusCode;
-                        context.Response.ContentType = "application/json";
-
-                        var result = JsonConvert.SerializeObject(ResponseWrapper.Fail(message));
-                        return context.Response.WriteAsync(result);
-                    }
-
                     context.HandleResponse();
                     if (context.Response.HasStarted)
                     {
