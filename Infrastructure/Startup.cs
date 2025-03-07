@@ -11,6 +11,7 @@ using Infrastructure.Context;
 using Infrastructure.Identity.Auth;
 using Infrastructure.Identity.Models;
 using Infrastructure.Identity.Tokens;
+using Infrastructure.OpenApi;
 using Infrastructure.Tenancy;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -173,6 +174,14 @@ public static class Startup
         });
 
         return services;
+    }
+
+    public static SwaggerSettings GetSwaggerSettings(this IServiceCollection services, IConfiguration config)
+    {
+        var swaggerSettingsConfig = config.GetSection(nameof(SwaggerSettings));
+        services.Configure<SwaggerSettings>(swaggerSettingsConfig);
+
+        return swaggerSettingsConfig.Get<SwaggerSettings>() ?? throw new InvalidOperationException("JwtSettings configuration was not found or is empty.");
     }
 
     public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)
