@@ -10,4 +10,11 @@
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="8.2.1" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
+    <PackageReference Include="Mapster" Version="7.3.0" />
+    <PackageReference Include="MediatR" Version="12.4.0" />
+  </ItemGroup>
+
 </Project>
