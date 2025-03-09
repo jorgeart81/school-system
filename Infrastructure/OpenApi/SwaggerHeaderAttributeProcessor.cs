@@ -10,12 +10,12 @@ public class SwaggerHeaderAttributeProcessor : IOperationProcessor
 {
     public bool Process(OperationProcessorContext context)
     {
-        if (context.MethodInfo.GetCustomAttributes(typeof(SwaggerHeaderAttribute)) is SwaggerHeaderAttribute swaggerHeader)
+        if (context.MethodInfo.GetCustomAttribute(typeof(SwaggerHeaderAttribute)) is SwaggerHeaderAttribute swaggerHeader)
         {
             var parameters = context.OperationDescription.Operation.Parameters;
 
             var existingParam = parameters
-                .FirstOrDefault(p => p.Kind == NSwag.OpenApiParameterKind.Header && p.Name == swaggerHeader.HeaderName);
+                .FirstOrDefault(p => p.Kind == OpenApiParameterKind.Header && p.Name == swaggerHeader.HeaderName);
 
             if (existingParam is not null)
             {
