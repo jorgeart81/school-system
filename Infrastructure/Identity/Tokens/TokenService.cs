@@ -34,7 +34,7 @@ public class TokenService(UserManager<ApplicationUser> userManager,
         var userInDb = await userManager.FindByNameAsync(request.Username)
             ?? throw new UnauthorizedException(["Authentication no successful."]);
 
-        if (await userManager.CheckPasswordAsync(userInDb, request.Password))
+        if (!await userManager.CheckPasswordAsync(userInDb, request.Password))
             throw new UnauthorizedException(["Incorrect credentials."]);
 
 
