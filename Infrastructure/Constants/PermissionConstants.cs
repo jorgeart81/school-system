@@ -46,8 +46,8 @@ public static class SchoolPermissions
         new SchoolPermission(SchoolAction.Update, SchoolFeature.Users, "Update Users", _systemAccess),
         new SchoolPermission(SchoolAction.Delete, SchoolFeature.Users, "Delete Users", _systemAccess),
 
-        new SchoolPermission(SchoolAction.Read, SchoolFeature.UserRoles, "Create User Roles", _systemAccess),
-        new SchoolPermission(SchoolAction.Update, SchoolFeature.UserRoles, "Create User Roles", _systemAccess),
+        new SchoolPermission(SchoolAction.Read, SchoolFeature.UserRoles, "Read User Roles", _systemAccess),
+        new SchoolPermission(SchoolAction.Update, SchoolFeature.UserRoles, "Update User Roles", _systemAccess),
 
         new SchoolPermission(SchoolAction.Read, SchoolFeature.Roles, "Read Roles", _systemAccess),
         new SchoolPermission(SchoolAction.Create, SchoolFeature.Roles, "Create Roles", _systemAccess),
