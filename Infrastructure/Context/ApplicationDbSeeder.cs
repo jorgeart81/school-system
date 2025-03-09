@@ -107,6 +107,7 @@ public class ApplicationDbSeeder(
                 FirsName = TenancyConstans.FirsName,
                 LastName = TenancyConstans.LastName,
                 UserName = _tenantInfoContextAccessor.MultiTenantContext.TenantInfo.Email,
+                Email = _tenantInfoContextAccessor.MultiTenantContext.TenantInfo.Email,
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
                 NormalizedEmail = _tenantInfoContextAccessor.MultiTenantContext.TenantInfo.Email.ToUpperInvariant(),
