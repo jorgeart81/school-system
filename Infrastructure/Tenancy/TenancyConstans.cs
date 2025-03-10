@@ -5,7 +5,7 @@ namespace Infrastructure.Tenancy;
 public class TenancyConstans
 {
     public const string TenantIdName = "tenant";
-    public const string DefautlPassword = "P@s50rd@123";
+    public const string DefaultPassword = "P@s50rd@123";
     public const string FirsName = "Admin";
     public const string LastName = "Root";
 

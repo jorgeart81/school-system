@@ -192,18 +192,18 @@ public static class Startup
         {
             document.PostProcess = doc =>
             {
-                doc.Info.Title = swaggerSettings.Title;
-                doc.Info.Description = swaggerSettings.Description;
+                doc.Info.Title = swaggerSettings?.Title ?? "School System API";
+                doc.Info.Description = swaggerSettings?.Description;
                 doc.Info.Contact = new OpenApiContact
                 {
-                    Name = swaggerSettings.ContactName,
-                    Email = swaggerSettings.ContactEmail,
-                    Url = swaggerSettings.ContactUrl,
+                    Name = swaggerSettings?.ContactName,
+                    Email = swaggerSettings?.ContactEmail,
+                    Url = swaggerSettings?.ContactUrl,
                 };
                 doc.Info.License = new OpenApiLicense
                 {
-                    Name = swaggerSettings.LicenseName,
-                    Url = swaggerSettings.LicenseUrl,
+                    Name = swaggerSettings?.LicenseName,
+                    Url = swaggerSettings?.LicenseUrl,
                 };
             };
 

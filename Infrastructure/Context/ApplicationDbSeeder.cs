@@ -117,7 +117,7 @@ public class ApplicationDbSeeder(
 
             var passwordHash = new PasswordHasher<ApplicationUser>();
 
-            incomingUser.PasswordHash = passwordHash.HashPassword(incomingUser, TenancyConstans.DefautlPassword);
+            incomingUser.PasswordHash = passwordHash.HashPassword(incomingUser, TenancyConstans.DefaultPassword);
             await _userManager.CreateAsync(incomingUser);
         }
 
