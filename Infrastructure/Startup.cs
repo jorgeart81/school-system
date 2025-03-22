@@ -167,14 +167,14 @@ public static class Startup
 
         services.AddAuthorization(options =>
         {
-            foreach (var prop in typeof(SchoolPermission).GetNestedTypes()
+            foreach (var prop in typeof(SchoolPermissions).GetNestedTypes()
                 .SelectMany(type => type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
             {
                 var propertyValue = prop.GetValue(null)?.ToString();
                 if (propertyValue is not null)
                 {
-                    options.AddPolicy(propertyValue, policy =>
-                        policy.RequireClaim(ClaimConstants.Permission, propertyValue));
+                    options.AddPolicy(propertyValue.ToString(), policy =>
+                        policy.RequireClaim(ClaimConstants.Permission, propertyValue.ToString()));
                 }
             }
         });
