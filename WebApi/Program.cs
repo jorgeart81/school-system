@@ -11,7 +11,7 @@ namespace WebApi
 
             // Add services to the container.
 
-            builder.Services.AddControllers();           
+            builder.Services.AddControllers();
 
             builder.Services.AddInfrastructureServices(builder.Configuration);
 
@@ -29,6 +29,8 @@ namespace WebApi
             app.UseHttpsRedirection();
 
             app.UseInfrastructure();
+
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.MapControllers();
 

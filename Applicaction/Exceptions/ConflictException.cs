@@ -3,7 +3,7 @@ using System.Net;
 
 namespace Applicaction.Exceptions;
 
-public class ConfiltException(List<string>? errorMessages = default,
+public class ConflictException(List<string>? errorMessages = default,
     HttpStatusCode statusCode = HttpStatusCode.Conflict) : Exception
 {
     public List<string>? ErrorMessages { get; set; } = errorMessages;

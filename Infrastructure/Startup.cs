@@ -128,17 +128,23 @@ public static class Startup
                 {
                     static Task ContextResponse(AuthenticationFailedContext context, HttpStatusCode statusCode, string message)
                     {
-                        context.Response.StatusCode = (int)statusCode;
-                        context.Response.ContentType = "application/json";
-
-                        var result = JsonConvert.SerializeObject(ResponseWrapper.Fail(message));
-                        return context.Response.WriteAsync(result);
+                        {
+                            context.Response.StatusCode = (int)statusCode;
+                            context.Response.ContentType = "application/json";
+                            var result = JsonConvert.SerializeObject(ResponseWrapper.Fail(message));
+                            return context.Response.WriteAsync(result);
+                        }
                     }
 
                     if (context.Exception is SecurityTokenExpiredException)
                         return ContextResponse(context, HttpStatusCode.Unauthorized, "Token has expired.");
                     else
-                        return ContextResponse(context, HttpStatusCode.InternalServerError, "An unhandled error has occured.");
+                    {
+                        if (!context.Response.HasStarted)
+                            return ContextResponse(context, HttpStatusCode.InternalServerError, "An unhandled error has occured.");
+
+                        return Task.CompletedTask;
+                    }
                 },
                 OnChallenge = context =>
                 {
