@@ -9,7 +9,7 @@ public static class SchoolAction
     public const string Create = nameof(Create);
     public const string Update = nameof(Update);
     public const string Delete = nameof(Delete);
-    public const string RefreshToken = nameof(RefreshToken);
+    public const string GetRefreshToken = nameof(GetRefreshToken);
     public const string UpgradeSubscription = nameof(UpgradeSubscription);
 }
 
@@ -62,7 +62,7 @@ public static class SchoolPermissions
         new SchoolPermission(SchoolAction.Update, SchoolFeature.Schools, "Update Schools", _academics),
         new SchoolPermission(SchoolAction.Delete, SchoolFeature.Schools, "Delete Schools", _academics),
 
-        new SchoolPermission(SchoolAction.RefreshToken, SchoolFeature.Tokens, "Generate Refresh Token", _systemAccess, IsBasic:true),
+        new SchoolPermission(SchoolAction.GetRefreshToken, SchoolFeature.Tokens, "Generate Refresh Token", _systemAccess, IsBasic:true),
     ];
 
     public static IReadOnlyList<SchoolPermission> All { get; }

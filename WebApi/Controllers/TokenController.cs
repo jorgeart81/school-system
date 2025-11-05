@@ -30,7 +30,7 @@ namespace WebApi.Controllers
 
         [HttpPost("refresh-token")]
         [OpenApiOperation("Used to generate new jwt from refresh token.")]
-        [ShouldHavePermission(action: SchoolAction.RefreshToken, feature: SchoolFeature.Tokens)]
+        [ShouldHavePermission(action: SchoolAction.GetRefreshToken, feature: SchoolFeature.Tokens)]
         public async Task<IActionResult> GetRefreshTokenAsync([FromBody] RefreshTokenRequest refreshTokenRequest)
         {
             IResponseWrapper response = await Sender.Send(new GetRefreshTokenQuery { RefreshToken = refreshTokenRequest });
